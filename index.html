@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Магазин — SACRALIUM</title>
+        <link rel="stylesheet" href="style/style.css" />
+    </head>
+    <body>
+        <div class="page-wrap">
+            <div class="container">
+                <header class="header">
+                    <a class="logo" href="https://sacralium.game">
+                        <img src="./images/logo.png" alt="SACRALIUM" />
+                    </a>
+                    <div class="search-block" id="searchBlock">
+                        <input type="text" id="characterSearch" placeholder="ID или имя персонажа" autocomplete="off" />
+                        <button type="button" class="btn-search" id="btnSearch" disabled aria-label="Найти">›</button>
+                    </div>
+                </header>
+
+                <p class="character-label" id="characterLabel"></p>
+
+                <a href="#" class="card-select" id="cardSelect" style="display: none">
+                    <span class="card-select-text">Селайси</span>
+                    <span class="btn-chevron" aria-hidden="true">›</span>
+                </a>
+
+                <section class="cards-grid">
+                    <article class="product-card">
+                        <div class="chest-image">
+                            <img src="./images/chest-1.png" alt="Деревянный сундук" onerror="this.style.background = '#3d2914'" />
+                        </div>
+
+                        <div class="price-dinar">10 000 динар</div>
+                        <p class="bonus-title">Плюс подарок:</p>
+                        <ul class="bonus-list">
+                            <li class="bonus-item--elixir-maly">x10 Малый элик. Исцеления</li>
+                            <li class="bonus-item--token-udachi">x3 Токен Удачи</li>
+                        </ul>
+                        <button type="button" class="btn-buy" disabled data-price="100">100 P</button>
+                    </article>
+                    <article class="product-card">
+                        <div class="chest-image">
+                            <img class="chest-image" src="./images/chest-2.png" alt="Резной сундук" onerror="this.style.background = '#2a2438'" />
+                        </div>
+                        <div class="price-dinar">120 000 динар</div>
+                        <p class="bonus-title">Плюс подарок:</p>
+                        <ul class="bonus-list">
+                            <li class="bonus-item--elixir-sredniy">x15 Средний элик. Исцеления</li>
+                            <li class="bonus-item--token-udachi">x10 Токен Удачи</li>
+                            <li class="bonus-item--dymka-haosa">x1 Дымка Хаоса</li>
+                            <li class="bonus-item--svitok-sily">x5 Свиток Силы</li>
+                        </ul>
+                        <button type="button" class="btn-buy" disabled data-price="1000">1000 P</button>
+                    </article>
+                    <article class="product-card">
+                        <div class="chest-image">
+                            <img class="chest-image" src="./images/chest-3.png" alt="Металлический сундук" onerror="this.style.background = '#2c2c2c'" />
+                        </div>
+                        <div class="price-dinar">1 500 000 динар</div>
+                        <p class="bonus-title">Плюс подарок:</p>
+                        <ul class="bonus-list">
+                            <li class="bonus-item--elixir-velikiy">x20 Великий элик. Исцеления</li>
+                            <li class="bonus-item--token-udachi">x25 Токен Удачи</li>
+                            <li class="bonus-item--dymka-haosa">x5 Дымка Хаоса</li>
+                            <li class="bonus-item--sok-kamnelysta">x10 Сок горного камнелиста</li>
+                        </ul>
+                        <button type="button" class="btn-buy" disabled data-price="10000">10 000 P</button>
+                    </article>
+                </section>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>Реквизиты компании-оператора сервиса (заглушка для демонстрации).</p>
+            </div>
+        </footer>
+
+        <script>
+            ;(function () {
+                var searchInput = document.getElementById("characterSearch")
+                var searchBlock = document.getElementById("searchBlock")
+                var btnSearch = document.getElementById("btnSearch")
+                var characterLabel = document.getElementById("characterLabel")
+                var cardSelect = document.getElementById("cardSelect")
+                var buyButtons = document.querySelectorAll(".product-card .btn-buy")
+
+                function getCharId() {
+                    var params = new URLSearchParams(window.location.search)
+                    return params.get("charID") || ""
+                }
+
+                function hasValidChar() {
+                    return getCharId().length > 0
+                }
+
+                function updateUI() {
+                    var charId = getCharId()
+                    if (hasValidChar()) {
+                        characterLabel.textContent = "Покупка для персонажа: Селайси"
+                        characterLabel.style.display = "block"
+                        cardSelect.style.display = "flex"
+                        buyButtons.forEach(function (btn) {
+                            btn.disabled = false
+                        })
+                    } else {
+                        characterLabel.textContent = ""
+                        characterLabel.style.display = "none"
+                        cardSelect.style.display = "none"
+                        buyButtons.forEach(function (btn) {
+                            btn.disabled = true
+                        })
+                    }
+                }
+
+                searchInput.addEventListener("input", function () {
+                    searchBlock.classList.toggle("has-input", this.value.trim().length >= 1)
+                    btnSearch.disabled = this.value.trim().length < 1
+                })
+
+                btnSearch.addEventListener("click", function () {
+                    if (this.disabled) return
+                    var query = searchInput.value.trim()
+                    if (!query) return
+                    // Заглушка: при «успешном» поиске переходим с charID (для демо — любой ввод)
+                    window.location.search = "charID=" + encodeURIComponent(query)
+                })
+
+                var resultPages = ["success.html", "pending.html", "cancel.html"]
+                buyButtons.forEach(function (btn, index) {
+                    btn.addEventListener("click", function () {
+                        if (this.disabled) return
+                        // Демо: 1-я карточка — success, 2-я — pending, 3-я — cancel
+                        window.location.href = resultPages[index] || "success.html"
+                    })
+                })
+
+                updateUI()
+            })()
+        </script>
+    </body>
+</html>
