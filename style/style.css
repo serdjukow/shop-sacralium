@@ -32,7 +32,6 @@
     --card-select-btn: #6b2d2d;
     --card-select-btn-hover: #8b3a3a;
 
-    /* Валюта / золото */
     --currency-gold: #ffebc1;
 
     /* Типографика (speck: Calibri-Light) */
@@ -56,11 +55,8 @@
     --card-shadow: drop-shadow(10.607px 10.607px 6.5px rgba(0, 0, 0, 0.2));
     --button-radius: 10px;
     --input-radius: 8px;
-
-    /* Анимация (speck: 0.2s для плашки) */
     --transition-fast: 0.2s ease;
 
-    /* Контейнер контента (ограничение ширины по скриншотам) */
     --container-max-width: 1100px;
 }
 
@@ -88,6 +84,11 @@ body {
 .page-wrap {
     flex: 1;
     padding: var(--spacing-lg);
+    padding-top: 70px;
+    background-image: url("../images/scrl-shop-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 /* Ограничение ширины контента по скриншотам */
@@ -135,102 +136,68 @@ h2 {
     gap: var(--spacing-md);
 }
 
-/* Блок поиска персонажа */
-.search-block {
+/* Блок персонажа в header (на месте старого input) */
+.character-block {
+    flex-shrink: 0;
+    align-self: flex-end;
+}
+
+/* Подпись «Покупка для персонажа: Имя» (показывается, когда имя есть) */
+.character-label {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin: 0;
+    display: none;
+}
+
+.character-label .character-name {
+    color: #fff !important;
+}
+
+/* Input в стиле плашки: компактный размер */
+.character-input-wrap {
     display: flex;
     align-items: center;
-    gap: 0;
+    background: var(--card-select-bg);
+    color: var(--card-select-text);
+    border-radius: var(--input-radius);
+    padding: 3px 6px;
+    transition: background var(--transition-fast);
+    width: 100%;
+    max-width: 260px;
 }
 
-.search-block input {
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px solid var(--bg-input-border);
-    border-right: none;
-    border-radius: var(--input-radius) 0 0 var(--input-radius);
-    background: var(--bg-input);
-    color: #333;
+.character-input-wrap:hover {
+    background: #f8f8f8;
+}
+
+.character-input-wrap input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: var(--card-select-text);
     font-family: inherit;
-    font-size: var(--font-size-body);
-    min-width: 220px;
+    font-size: 1.1rem;
+    padding: 4px 8px 4px 0;
+    outline: none;
 }
 
-.search-block input::placeholder {
+.character-input-wrap input::placeholder {
     color: #888;
 }
 
-.search-block input:focus {
-    outline: none;
-    border-color: #999;
-}
-
-/* Кнопка поиска: серая когда disabled, красная когда есть текст */
-.search-block .btn-search {
-    padding: var(--spacing-sm) var(--spacing-md);
+.character-btn-search {
+    width: 28px;
+    height: 28px;
     border: none;
-    border-radius: 0 var(--input-radius) var(--input-radius) 0;
+    border-radius: 50%;
     background: var(--button-disabled);
     color: var(--text-on-button);
     cursor: default;
     font-family: inherit;
-    font-size: var(--font-size-button);
-    transition: background var(--transition-fast);
-}
-
-/* Когда в поле есть текст — кнопка красная (класс ставится через JS) */
-.search-block.has-input .btn-search {
-    background: var(--button-search-active);
-    cursor: pointer;
-}
-
-.search-block.has-input .btn-search:hover {
-    background: var(--button-search-hover);
-}
-
-.search-block .btn-search:disabled {
-    cursor: not-allowed;
-    background: var(--button-disabled) !important;
-}
-
-.search-block .btn-search:disabled:hover {
-    background: var(--button-disabled) !important;
-}
-
-/* Подпись «Покупка для персонажа: Имя» */
-.character-label {
-    font-size: var(--font-size-subtitle);
-    color: var(--text-secondary);
-    margin: 0;
-}
-
-/* Плашка выбора предмета (карточка с кнопкой-стрелкой) */
-.card-select {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--card-select-bg);
-    color: var(--card-select-text);
-    border-radius: var(--card-radius);
-    padding: var(--spacing-md) var(--spacing-lg);
-    transition: background var(--transition-fast);
-    text-decoration: none;
-    max-width: 320px;
-}
-
-.card-select:hover {
-    background: #f8f8f8;
-}
-
-.card-select .card-select-text {
-    font-size: var(--font-size-list);
-    color: var(--card-select-text);
-}
-
-.card-select .btn-chevron {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--card-select-btn);
-    color: var(--text-on-button);
+    font-size: 1rem;
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -238,8 +205,22 @@ h2 {
     flex-shrink: 0;
 }
 
-.card-select:hover .btn-chevron {
+.character-input-wrap.has-input .character-btn-search {
+    background: var(--card-select-btn);
+    cursor: pointer;
+}
+
+.character-input-wrap.has-input .character-btn-search:hover {
     background: var(--card-select-btn-hover);
+}
+
+.character-btn-search:disabled {
+    cursor: not-allowed;
+    background: var(--button-disabled) !important;
+}
+
+.character-btn-search:disabled:hover {
+    background: var(--button-disabled) !important;
 }
 
 /* Сетка карточек товаров */
@@ -272,7 +253,6 @@ h2 {
 
 .product-card .chest-image {
     width: 100%;
-    margin-bottom: var(--spacing-md);
     border-radius: var(--button-radius);
     aspect-ratio: 958/685;
 }
@@ -284,12 +264,14 @@ h2 {
 }
 
 .product-card .price-dinar {
-    font-size: 1.25rem;
+    font-size: 1.6rem;
+    font-weight: 300;
     color: var(--currency-gold);
     margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: flex-start;
     gap: var(--spacing-sm);
 }
 
@@ -308,7 +290,7 @@ h2 {
 .product-card .bonus-title {
     font-size: 0.9rem;
     color: var(--text-secondary);
-    margin: var(--spacing-sm) 0;
+    margin: var(--spacing-sm) 0 var(--spacing-sm) 70px;
     width: 100%;
 }
 
@@ -317,7 +299,7 @@ h2 {
     padding: 0;
     margin: 0 0 var(--spacing-lg);
     width: 100%;
-    color: var(--text-primary);
+    color: #aaaaaa;
     font-size: var(--font-size-list);
 }
 
@@ -336,34 +318,34 @@ h2 {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-/* Иконки бонусов из папки images (::before) */
+/* Иконки бонусов из папки images (::before), имена по icons-readme.txt */
 .product-card .bonus-list li.bonus-item--elixir-maly::before {
-    background-image: url("../images/elix-midl.png");
-}
-.product-card .bonus-list li.bonus-item--token-udachi::before {
-    background-image: url("../images/token.png");
+    background-image: url("../images/elixir-maly.png");
 }
 .product-card .bonus-list li.bonus-item--elixir-sredniy::before {
-    background-image: url("../images/elix-midl.png");
-}
-.product-card .bonus-list li.bonus-item--dymka-haosa::before {
-    background-image: url("../images/chaos.png");
-}
-.product-card .bonus-list li.bonus-item--svitok-sily::before {
-    background-image: url("../images/elix-midl.png");
+    background-image: url("../images/elixir-sredniy.png");
 }
 .product-card .bonus-list li.bonus-item--elixir-velikiy::before {
-    background-image: url("../images/elix-big.png");
+    background-image: url("../images/elixir-velikiy.png");
+}
+.product-card .bonus-list li.bonus-item--token-udachi::before {
+    background-image: url("../images/token-udachi.png");
+}
+.product-card .bonus-list li.bonus-item--dymka-haosa::before {
+    background-image: url("../images/dymka-haosa.png");
+}
+.product-card .bonus-list li.bonus-item--svitok-sily::before {
+    background-image: url("../images/svitok-sily.png");
 }
 .product-card .bonus-list li.bonus-item--sok-kamnelysta::before {
-    background-image: url("../images/chaos.png");
+    background-image: url("../images/sok-kamnelysta.png");
 }
 
 .product-card .btn-buy {
@@ -391,7 +373,7 @@ h2 {
 
 .product-card .btn-buy:disabled {
     cursor: not-allowed;
-    background: var(--button-disabled);
+    background-image: url("../images/button_dis.png");
     opacity: 0.8;
 }
 
@@ -399,17 +381,16 @@ h2 {
 .page-center {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-    text-align: center;
-    padding: var(--spacing-xl);
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    text-align: left;
+    padding: var(--spacing-xl) 0 0;
 }
 
 .header .logo {
     display: block;
     max-width: 200px;
-    margin-bottom: var(--spacing-xl);
 }
 
 .header .logo img {
@@ -420,12 +401,17 @@ h2 {
 }
 
 .page-center h1 {
+    color: var(--text-primary);
     margin-bottom: var(--spacing-md);
+}
+
+.page-center .success-title {
+    color: var(--text-success);
 }
 
 .page-center p {
     color: var(--text-primary);
-    max-width: 480px;
+    width: 100%;
     line-height: 1.5;
     margin: 0 0 var(--spacing-sm);
 }
@@ -437,10 +423,6 @@ h2 {
 
 .page-center a:hover {
     color: #42a5f5;
-}
-
-.page-center .success-title {
-    color: var(--text-success);
 }
 
 /* Футер (вне скролла, черный фон — по ТЗ) */

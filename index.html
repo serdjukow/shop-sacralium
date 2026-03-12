@@ -2,6 +2,7 @@
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
+        <link rel="icon" href="./favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Магазин — SACRALIUM</title>
         <link rel="stylesheet" href="style/style.css" />
@@ -13,18 +14,14 @@
                     <a class="logo" href="https://sacralium.game">
                         <img src="./images/logo.png" alt="SACRALIUM" />
                     </a>
-                    <div class="search-block" id="searchBlock">
-                        <input type="text" id="characterSearch" placeholder="ID или имя персонажа" autocomplete="off" />
-                        <button type="button" class="btn-search" id="btnSearch" disabled aria-label="Найти">›</button>
+                    <div class="character-block">
+                        <div class="character-input-wrap" id="characterInputWrap">
+                            <input type="text" id="characterSearch" placeholder="ID или имя персонажа" autocomplete="off" />
+                            <button type="button" class="character-btn-search" id="btnSearch" disabled aria-label="Найти">›</button>
+                        </div>
+                        <p class="character-label" id="characterLabel"></p>
                     </div>
                 </header>
-
-                <p class="character-label" id="characterLabel"></p>
-
-                <a href="#" class="card-select" id="cardSelect" style="display: none">
-                    <span class="card-select-text">Селайси</span>
-                    <span class="btn-chevron" aria-hidden="true">›</span>
-                </a>
 
                 <section class="cards-grid">
                     <article class="product-card">
@@ -72,19 +69,12 @@
             </div>
         </div>
 
-        <footer class="footer">
-            <div class="container">
-                <p>Реквизиты компании-оператора сервиса (заглушка для демонстрации).</p>
-            </div>
-        </footer>
-
         <script>
             ;(function () {
                 var searchInput = document.getElementById("characterSearch")
-                var searchBlock = document.getElementById("searchBlock")
+                var inputWrap = document.getElementById("characterInputWrap")
                 var btnSearch = document.getElementById("btnSearch")
                 var characterLabel = document.getElementById("characterLabel")
-                var cardSelect = document.getElementById("cardSelect")
                 var buyButtons = document.querySelectorAll(".product-card .btn-buy")
 
                 function getCharId() {
@@ -92,23 +82,28 @@
                     return params.get("charID") || ""
                 }
 
+                function getCharacterName() {
+                    var id = getCharId()
+                    return id ? decodeURIComponent(id) : ""
+                }
+
                 function hasValidChar() {
                     return getCharId().length > 0
                 }
 
                 function updateUI() {
-                    var charId = getCharId()
+                    var name = getCharacterName()
                     if (hasValidChar()) {
-                        characterLabel.textContent = "Покупка для персонажа: Селайси"
+                        characterLabel.innerHTML = "Покупка для персонажа: " + `<span class="character-name">${name}</span>`
                         characterLabel.style.display = "block"
-                        cardSelect.style.display = "flex"
+                        inputWrap.style.display = "none"
                         buyButtons.forEach(function (btn) {
                             btn.disabled = false
                         })
                     } else {
-                        characterLabel.textContent = ""
                         characterLabel.style.display = "none"
-                        cardSelect.style.display = "none"
+                        inputWrap.style.display = "flex"
+                        characterLabel.textContent = ""
                         buyButtons.forEach(function (btn) {
                             btn.disabled = true
                         })
@@ -116,7 +111,7 @@
                 }
 
                 searchInput.addEventListener("input", function () {
-                    searchBlock.classList.toggle("has-input", this.value.trim().length >= 1)
+                    inputWrap.classList.toggle("has-input", this.value.trim().length >= 1)
                     btnSearch.disabled = this.value.trim().length < 1
                 })
 
@@ -124,7 +119,6 @@
                     if (this.disabled) return
                     var query = searchInput.value.trim()
                     if (!query) return
-                    // Заглушка: при «успешном» поиске переходим с charID (для демо — любой ввод)
                     window.location.search = "charID=" + encodeURIComponent(query)
                 })
 
