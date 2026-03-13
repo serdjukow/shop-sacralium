@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Магазин — SACRALIUM</title>
         <link rel="stylesheet" href="style/style.css" />
+        <script src="script/main.js" defer></script>
     </head>
     <body>
         <div class="page-wrap">
@@ -29,19 +30,19 @@
                             <img src="./images/chest-1.png" alt="Деревянный сундук" onerror="this.style.background = '#3d2914'" />
                         </div>
 
-                        <div class="price-dinar">10 000 динар</div>
+                        <div class="price-dinar" data-dinar="10000"><span class="price-dinar__num"></span> динар</div>
                         <p class="bonus-title">Плюс подарок:</p>
                         <ul class="bonus-list">
                             <li class="bonus-item--elixir-maly">x10 Малый элик. Исцеления</li>
                             <li class="bonus-item--token-udachi">x3 Токен Удачи</li>
                         </ul>
-                        <button type="button" class="btn-buy" disabled data-price="100">100 <span class="btn-buy__rub">₽</span></button>
+                        <button type="button" class="btn-buy" disabled data-price="100"><span class="btn-buy__num"></span> <span class="btn-buy__rub">₽</span></button>
                     </article>
                     <article class="product-card">
                         <div class="chest-image">
                             <img class="chest-image" src="./images/chest-2.png" alt="Резной сундук" onerror="this.style.background = '#2a2438'" />
                         </div>
-                        <div class="price-dinar">120 000 динар</div>
+                        <div class="price-dinar" data-dinar="120000"><span class="price-dinar__num"></span> динар</div>
                         <p class="bonus-title">Плюс подарок:</p>
                         <ul class="bonus-list">
                             <li class="bonus-item--elixir-sredniy">x15 Средний элик. Исцеления</li>
@@ -49,13 +50,13 @@
                             <li class="bonus-item--dymka-haosa">x1 Дымка Хаоса</li>
                             <li class="bonus-item--svitok-sily">x5 Свиток Силы</li>
                         </ul>
-                        <button type="button" class="btn-buy" disabled data-price="1000">1000 <span class="btn-buy__rub">₽</span></button>
+                        <button type="button" class="btn-buy" disabled data-price="1000"><span class="btn-buy__num"></span> <span class="btn-buy__rub">₽</span></button>
                     </article>
                     <article class="product-card">
                         <div class="chest-image">
                             <img class="chest-image" src="./images/chest-3.png" alt="Металлический сундук" onerror="this.style.background = '#2c2c2c'" />
                         </div>
-                        <div class="price-dinar">1 500 000 динар</div>
+                        <div class="price-dinar" data-dinar="1500000"><span class="price-dinar__num"></span> динар</div>
                         <p class="bonus-title">Плюс подарок:</p>
                         <ul class="bonus-list">
                             <li class="bonus-item--elixir-velikiy">x20 Великий элик. Исцеления</li>
@@ -63,7 +64,7 @@
                             <li class="bonus-item--dymka-haosa">x5 Дымка Хаоса</li>
                             <li class="bonus-item--sok-kamnelysta">x10 Сок горного камнелиста</li>
                         </ul>
-                        <button type="button" class="btn-buy" disabled data-price="10000">10 000 <span class="btn-buy__rub">₽</span></button>
+                        <button type="button" class="btn-buy" disabled data-price="10000"><span class="btn-buy__num"></span> <span class="btn-buy__rub">₽</span></button>
                     </article>
                 </section>
             </div>
@@ -75,71 +76,5 @@
                 <p><a href="/docs/oferta.pdf" target="_blank" rel="noopener">Лицензионное соглашение — оферта</a> · <a href="/docs/policy.pdf" target="_blank" rel="noopener">Политика конфиденциальности</a></p>
             </div>
         </footer>
-
-        <script>
-            ;(function () {
-                var searchInput = document.getElementById("characterSearch")
-                var inputWrap = document.getElementById("characterInputWrap")
-                var btnSearch = document.getElementById("btnSearch")
-                var characterLabel = document.getElementById("characterLabel")
-                var buyButtons = document.querySelectorAll(".product-card .btn-buy")
-
-                function getCharId() {
-                    var params = new URLSearchParams(window.location.search)
-                    return params.get("charID") || ""
-                }
-
-                function getCharacterName() {
-                    var id = getCharId()
-                    return id ? decodeURIComponent(id) : ""
-                }
-
-                function hasValidChar() {
-                    return getCharId().length > 0
-                }
-
-                function updateUI() {
-                    var name = getCharacterName()
-                    if (hasValidChar()) {
-                        characterLabel.innerHTML = "Покупка для персонажа: " + `<span class="character-name">${name}</span>`
-                        characterLabel.style.display = "block"
-                        inputWrap.style.display = "none"
-                        buyButtons.forEach(function (btn) {
-                            btn.disabled = false
-                        })
-                    } else {
-                        characterLabel.style.display = "none"
-                        inputWrap.style.display = "flex"
-                        characterLabel.textContent = ""
-                        buyButtons.forEach(function (btn) {
-                            btn.disabled = true
-                        })
-                    }
-                }
-
-                searchInput.addEventListener("input", function () {
-                    inputWrap.classList.toggle("has-input", this.value.trim().length >= 1)
-                    btnSearch.disabled = this.value.trim().length < 1
-                })
-
-                btnSearch.addEventListener("click", function () {
-                    if (this.disabled) return
-                    var query = searchInput.value.trim()
-                    if (!query) return
-                    window.location.search = "charID=" + encodeURIComponent(query)
-                })
-
-                var resultPages = ["success.html", "pending.html", "cancel.html"]
-                buyButtons.forEach(function (btn, index) {
-                    btn.addEventListener("click", function () {
-                        if (this.disabled) return
-                        // Demo: 1st card → success, 2nd → pending, 3rd → cancel
-                        window.location.href = resultPages[index] || "success.html"
-                    })
-                })
-
-                updateUI()
-            })()
-        </script>
     </body>
 </html>
